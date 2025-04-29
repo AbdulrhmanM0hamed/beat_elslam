@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../home/presentation/widgets/home_features_grid.dart';
 import '../../../home/presentation/widgets/last_read_card.dart';
-import '../../../home/presentation/widgets/section_title.dart';
 import '../../../home/presentation/widgets/islamic_content_grid.dart';
 
 class HomeViewBody extends StatelessWidget {
@@ -9,24 +8,24 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
+           SizedBox(height: 8),
           
           // Islamic features section
-          const HomeFeaturesGrid(),
+           HomeFeaturesGrid(),
           
           // Quran section
-        const LastReadCard(),
+         LastReadCard(),
           
           // Islamic content section
       
-          const IslamicContentGrid(),
+           IslamicContentGrid(),
           
           // Bottom spacing
-          const SizedBox(height: 16),
+           SizedBox(height: 16),
         ],
       ),
     );
