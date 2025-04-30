@@ -15,7 +15,7 @@ class HadithSectionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final customColors = Theme.of(context).extension<CustomColors>();
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -65,10 +65,12 @@ class HadithSectionsScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 70, color: AppColors.error),
+                    const Icon(Icons.error_outline,
+                        size: 70, color: AppColors.error),
                     const SizedBox(height: 24),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                       margin: const EdgeInsets.symmetric(horizontal: 24),
                       decoration: BoxDecoration(
                         color: customColors?.cardContentBg ?? Colors.white,
@@ -87,21 +89,24 @@ class HadithSectionsScreen extends StatelessWidget {
                             state.message,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 16, 
+                              fontSize: 16,
                               color: customColors?.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 24),
                           ElevatedButton.icon(
                             onPressed: () {
-                              context.read<HadithCubit>().loadHadithCollections();
+                              context
+                                  .read<HadithCubit>()
+                                  .loadHadithCollections();
                             },
                             icon: const Icon(Icons.refresh),
                             label: const Text('إعادة المحاولة'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -121,7 +126,8 @@ class HadithSectionsScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.info_outline, size: 64, color: AppColors.primary),
+                      const Icon(Icons.info_outline,
+                          size: 64, color: AppColors.primary),
                       const SizedBox(height: 16),
                       Text(
                         'لا توجد أحاديث متاحة',
@@ -135,7 +141,8 @@ class HadithSectionsScreen extends StatelessWidget {
                   ),
                 );
               }
-              return _buildCollectionsList(context, state.collections, customColors);
+              return _buildCollectionsList(
+                  context, state.collections, customColors);
             }
 
             return const SizedBox.shrink();
@@ -146,7 +153,7 @@ class HadithSectionsScreen extends StatelessWidget {
   }
 
   Widget _buildCollectionsList(
-    BuildContext context, 
+    BuildContext context,
     List<HadithCollection> collections,
     CustomColors? customColors,
   ) {
@@ -178,7 +185,8 @@ class HadithSectionsScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HadithListScreen(collection: collection),
+                      builder: (context) =>
+                          HadithListScreen(collection: collection),
                     ),
                   );
                 },
@@ -187,9 +195,11 @@ class HadithSectionsScreen extends StatelessWidget {
                   children: [
                     // Header with colored background
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
                       decoration: BoxDecoration(
-                        color: customColors?.cardHeaderBg ?? AppColors.primary.withOpacity(0.1),
+                        color: customColors?.cardHeaderBg ??
+                            AppColors.primary.withOpacity(0.1),
                         borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(16),
                           topLeft: Radius.circular(16),
@@ -204,13 +214,15 @@ class HadithSectionsScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: customColors?.textPrimary ?? Colors.black,
+                                color:
+                                    customColors?.textPrimary ?? Colors.black,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: AppColors.primary,
                               borderRadius: BorderRadius.circular(30),
@@ -228,27 +240,20 @@ class HadithSectionsScreen extends StatelessWidget {
                       ),
                     ),
                     // Content
-                    Padding(
-                      padding: const EdgeInsets.all(16),
+                    const Padding(
+                      padding: EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            collection.name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: customColors?.textSecondary ?? Colors.grey.shade700,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.menu_book_outlined,
                                 size: 16,
                                 color: AppColors.primary,
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Text(
                                 'عرض الأحاديث',
                                 style: TextStyle(
@@ -256,8 +261,8 @@ class HadithSectionsScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const Spacer(),
-                              const Icon(
+                              Spacer(),
+                              Icon(
                                 Icons.arrow_forward_ios,
                                 size: 14,
                                 color: AppColors.primary,
@@ -276,4 +281,4 @@ class HadithSectionsScreen extends StatelessWidget {
       },
     );
   }
-} 
+}

@@ -136,7 +136,7 @@ class HadithListScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
-                                        hadith.grades.first.grade,
+                                        _getLocalizedGradeText(hadith.grades.first.grade),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -168,35 +168,112 @@ class HadithListScreen extends StatelessWidget {
                                     const SizedBox(height: 20),
                                     const Divider(height: 1),
                                     const SizedBox(height: 20),
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: customColors?.timeContainerBg ?? Colors.grey.shade50,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: customColors?.timeContainerBorder ?? Colors.grey.shade200,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.bookmark_outlined,
-                                            size: 16,
-                                            color: AppColors.primary,
-                                          ),
-                                          const SizedBox(width: 8),
+                                    Row(
+                                      children: [
+                                        if (hadith.grades.isNotEmpty) ...[
                                           Expanded(
-                                            child: Text(
-                                              hadith.reference,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: customColors?.textSecondary ?? Colors.grey.shade700,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: customColors?.timeContainerBg ?? Colors.grey.shade50,
+                                                borderRadius: BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: customColors?.timeContainerBorder ?? Colors.grey.shade200,
+                                                ),
                                               ),
-                                              textAlign: TextAlign.right,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.verified_outlined,
+                                                        size: 16,
+                                                        color: _getGradeColor(hadith.grades.first.grade),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      Text(
+                                                        'الدرجة',
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          color: customColors?.textPrimary ?? Colors.black87,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    hadith.grades.first.grade,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: customColors?.textSecondary ?? Colors.grey.shade700,
+                                                    ),
+                                                  ),
+                                                  if (hadith.grades.first.name.isNotEmpty) ...[
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      'المحدث: ${hadith.grades.first.name}',
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontStyle: FontStyle.italic,
+                                                        color: customColors?.textSecondary ?? Colors.grey.shade700,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ],
+                                              ),
                                             ),
                                           ),
+                                          const SizedBox(width: 12),
                                         ],
-                                      ),
+                                        if (hadith.reference.isNotEmpty)
+                                          Expanded(
+                                            child: Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: customColors?.timeContainerBg ?? Colors.grey.shade50,
+                                                borderRadius: BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: customColors?.timeContainerBorder ?? Colors.grey.shade200,
+                                                ),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.bookmark_outlined,
+                                                        size: 16,
+                                                        color: AppColors.primary,
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      Text(
+                                                        'المصدر',
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          color: customColors?.textPrimary ?? Colors.black87,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    hadith.reference,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: customColors?.textSecondary ?? Colors.grey.shade700,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ],
                                 ],
@@ -215,15 +292,62 @@ class HadithListScreen extends StatelessWidget {
 
   Color _getGradeColor(String grade) {
     final lowerGrade = grade.toLowerCase();
-    if (lowerGrade.contains('صحيح') || lowerGrade == 'sahih') {
+    
+    // تصنيفات الصحيح
+    if (lowerGrade.contains('صحيح') || 
+        lowerGrade.contains('sahih') || 
+        lowerGrade.contains('maqtu sahih')) {
       return Colors.green.shade700;
-    } else if (lowerGrade.contains('حسن') || lowerGrade == 'hasan') {
+    }
+    
+    // تصنيفات الحسن
+    else if (lowerGrade.contains('حسن') || 
+             lowerGrade.contains('hasan')) {
       return Colors.blue.shade700;
-    } else if (lowerGrade.contains('ضعيف') || lowerGrade == 'da\'if') {
+    }
+    
+    // تصنيفات الضعيف
+    else if (lowerGrade.contains('ضعيف') || 
+             lowerGrade.contains('da\'if') ||
+             lowerGrade.contains('daif')) {
       return Colors.orange.shade700;
-    } else if (lowerGrade.contains('موضوع') || lowerGrade == 'maudu') {
+    }
+    
+    // تصنيفات الموضوع
+    else if (lowerGrade.contains('موضوع') || 
+             lowerGrade.contains('maudu')) {
       return Colors.red.shade700;
     }
-    return Colors.grey.shade700;
+    
+    // تصنيفات غير معروفة
+    return Colors.purple.shade700;
+  }
+
+  String _getLocalizedGradeText(String grade) {
+    final lowerGrade = grade.toLowerCase();
+    
+    if (lowerGrade.contains('صحيح') || 
+        lowerGrade.contains('sahih') || 
+        lowerGrade.contains('maqtu sahih')) {
+      return 'صحيح';
+    }
+    
+    else if (lowerGrade.contains('حسن') || 
+             lowerGrade.contains('hasan')) {
+      return 'حسن';
+    }
+    
+    else if (lowerGrade.contains('ضعيف') || 
+             lowerGrade.contains('da\'if') ||
+             lowerGrade.contains('daif')) {
+      return 'ضعيف';
+    }
+    
+    else if (lowerGrade.contains('موضوع') || 
+             lowerGrade.contains('maudu')) {
+      return 'موضوع';
+    }
+    
+    return 'غير معروف';
   }
 } 
