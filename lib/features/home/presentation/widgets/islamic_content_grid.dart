@@ -28,7 +28,7 @@ class IslamicContentGrid extends StatelessWidget {
           
           // Hadith Card
           ContentCard(
-            title: 'حديث',
+            title: 'الأحاديث النبوية',
             iconPath: 'assets/images/moon.png',
             cardColor: const Color(0xFFB17AD8),
             onTap: () {
@@ -38,7 +38,7 @@ class IslamicContentGrid extends StatelessWidget {
           
           // Tafsir Card
           ContentCard(
-            title: 'تفسير',
+            title: 'تفسير القرآن',
             iconPath: 'assets/images/mushaf.png',
             cardColor: const Color(0xFFE678AE),
             onTap: () {
@@ -46,11 +46,11 @@ class IslamicContentGrid extends StatelessWidget {
             },
           ),
           
-          // Names of Allah Card - تحسين مظهر كارت أسماء الله الحسنى
+          // Names of Allah Card
           ContentCard(
             title: 'أسماء الله الحسنى',
-            iconPath: 'assets/images/moon.png', // استخدام صورة القمر بدلاً من الصورة المفقودة
-            cardColor: const Color.fromARGB(255, 74, 137, 168), // لون داكن راقي يناسب أهمية المحتوى
+            iconPath: 'assets/images/moon.png',
+            cardColor: const Color.fromARGB(255, 74, 137, 168),
             onTap: () {
               Navigator.pushNamed(context, '/asma-allah');
             },

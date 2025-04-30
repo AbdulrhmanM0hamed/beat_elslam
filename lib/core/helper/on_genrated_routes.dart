@@ -17,6 +17,9 @@ import '../../features/asma_allah/presentation/cubit/asma_allah_cubit.dart';
 import '../../features/hadith/presentation/screens/hadith_sections_screen.dart';
 import '../../features/hadith/data/repositories/hadith_repository.dart';
 import '../../features/hadith/presentation/cubit/hadith_cubit.dart';
+import '../../features/tafsir/presentation/screens/tafsir_surah_list_screen.dart';
+import '../../features/tafsir/data/repositories/tafsir_repository.dart';
+import '../../features/tafsir/presentation/cubit/tafsir_cubit.dart';
 
 final _logger = Logger();
 
@@ -103,6 +106,23 @@ Route<dynamic> onGenratedRoutes(RouteSettings settings) {
         );
       } catch (e, stackTrace) {
         _logger.e('Error creating HadithSectionsScreen route', error: e, stackTrace: stackTrace);
+        return MaterialPageRoute(builder: (context) => const HomeView());
+      }
+
+    case '/tafsir':
+    case TafsirSurahListScreen.routeName:
+      _logger.i('Navigating to TafsirSurahListScreen');
+      try {
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => TafsirCubit(
+              TafsirRepositoryImpl(),
+            ),
+            child: const TafsirSurahListScreen(),
+          ),
+        );
+      } catch (e, stackTrace) {
+        _logger.e('Error creating TafsirSurahListScreen route', error: e, stackTrace: stackTrace);
         return MaterialPageRoute(builder: (context) => const HomeView());
       }
 
