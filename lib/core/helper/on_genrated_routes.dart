@@ -15,7 +15,6 @@ import '../../features/quran/presentation/screens/quran_optimized_screen.dart';
 import '../../features/asma_allah/data/repositories/allah_names_repository.dart';
 import '../../features/asma_allah/presentation/cubit/asma_allah_cubit.dart';
 import '../../features/hadith/presentation/screens/hadith_sections_screen.dart';
-import '../../features/hadith/presentation/screens/hadith_list_screen.dart';
 import '../../features/hadith/data/repositories/hadith_repository.dart';
 import '../../features/hadith/presentation/cubit/hadith_cubit.dart';
 
@@ -90,24 +89,22 @@ Route<dynamic> onGenratedRoutes(RouteSettings settings) {
         return MaterialPageRoute(builder: (context) => const HomeView());
       }
 
+    case '/hadith':
     case HadithSectionsScreen.routeName:
       _logger.i('Navigating to HadithSectionsScreen');
-      return MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) => HadithCubit(HadithRepositoryImpl()),
-          child: const HadithSectionsScreen(),
-        ),
-      );
-
-    case '/hadith-list':
-      final sectionIndex = settings.arguments as int;
-      _logger.i('Navigating to HadithListScreen with section index: $sectionIndex');
-      return MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) => HadithCubit(HadithRepositoryImpl()),
-          child: HadithListScreen(sectionIndex: sectionIndex),
-        ),
-      );
+      try {
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => HadithCubit(
+              HadithRepositoryImpl(),
+            ),
+            child: const HadithSectionsScreen(),
+          ),
+        );
+      } catch (e, stackTrace) {
+        _logger.e('Error creating HadithSectionsScreen route', error: e, stackTrace: stackTrace);
+        return MaterialPageRoute(builder: (context) => const HomeView());
+      }
 
     default:
       _logger.w('Route not found: ${settings.name}, defaulting to HomeView');
