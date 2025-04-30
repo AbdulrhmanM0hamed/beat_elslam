@@ -10,6 +10,7 @@ import 'core/helper/on_genrated_routes.dart';
 import 'features/prayer_times/data/repositories/prayer_times_repository.dart';
 import 'features/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'features/quran/data/models/surah_model.dart';
+import 'features/asma_allah/models/allah_name_model.dart';
 
 void main() async {
   try {
@@ -30,6 +31,9 @@ void main() async {
 
     // Start preloading Quran data in the background
     SurahList.preInitialize();
+    
+    // Start preloading Allah Names data in the background
+    AllahNamesList.preInitialize();
 
     runApp(const MyApp());
   } catch (e) {

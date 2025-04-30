@@ -46,13 +46,13 @@ class IslamicContentGrid extends StatelessWidget {
             },
           ),
           
-          // Names of Allah Card
+          // Names of Allah Card - تحسين مظهر كارت أسماء الله الحسنى
           ContentCard(
             title: 'أسماء الله الحسنى',
-            iconPath: 'assets/images/nameofallah.png',
-            cardColor: const Color(0xFF7B90D8),
+            iconPath: 'assets/images/moon.png', // استخدام صورة القمر بدلاً من الصورة المفقودة
+            cardColor: const Color.fromARGB(255, 74, 137, 168), // لون داكن راقي يناسب أهمية المحتوى
             onTap: () {
-              Navigator.pushNamed(context, '/names-of-allah');
+              Navigator.pushNamed(context, '/asma-allah');
             },
           ),
         ],

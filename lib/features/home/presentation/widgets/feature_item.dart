@@ -1,14 +1,20 @@
 import 'package:beat_elslam/core/utils/constant/font_manger.dart';
 import 'package:beat_elslam/core/utils/constant/styles_manger.dart';
+import 'package:beat_elslam/features/asma_allah/data/repositories/allah_names_repository.dart';
+import 'package:beat_elslam/features/asma_allah/presentation/cubit/asma_allah_cubit.dart';
+import 'package:beat_elslam/features/asma_allah/presentation/screens/asma_allah_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 
 class FeatureItem extends StatelessWidget {
   final String icon;
   final String title;
   final String routeName;
   final Color color;
+  final Logger _logger = Logger();
 
-  const FeatureItem({
+  FeatureItem({
     super.key,
     required this.icon,
     required this.title,
@@ -20,7 +26,26 @@ class FeatureItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, routeName);
+        _logger.i('Tapped on feature: $title with route: $routeName');
+        
+        // استخدام نهج خاص لميزة أسماء الله الحسنى
+        if (routeName == '/asma-allah') {
+          _logger.i('Using direct navigation for Asma Allah feature');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => AsmaAllahCubit(
+                  AllahNamesRepositoryImpl(),
+                ),
+                child: const AsmaAllahScreen(),
+              ),
+            ),
+          );
+        } else {
+          // استخدام نظام التنقل العادي لباقي الميزات
+          Navigator.pushNamed(context, routeName);
+        }
       },
       child: Container(
         width: 80,

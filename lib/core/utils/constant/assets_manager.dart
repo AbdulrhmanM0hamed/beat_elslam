@@ -10,4 +10,5 @@ class AssetsManager {
   static const String pngtreeImage = '$imagesPath/pngtree.png';
   static const String moonImage = '$imagesPath/moon.png';
   static const String mushafImage = '$imagesPath/mushaf_1.png';
+  static const String allahNamesImage = '$imagesPath/allah_names.png';
 }

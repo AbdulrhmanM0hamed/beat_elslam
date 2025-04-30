@@ -58,6 +58,7 @@ dependencies:
   just_audio: ^0.9.36
   just_audio_background: ^0.0.1-beta.11
   location: ^8.0.0
+  logger: ^2.5.0
   path_provider: ^2.1.5
   pdfrx: ^1.1.25
   shared_preferences: ^2.5.3

@@ -14,31 +14,32 @@ class HomeFeaturesGrid extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
-        children: const [
+        children: [
           FeatureItem(
             icon: AssetsManager.pngtreeImage,
             title: 'المسبحة',
             routeName: '/masabha',
-            color: Color(0xFF83B783), // Green shade
+            color: const Color(0xFF83B783), // Green shade
           ),
           FeatureItem(
             icon: AssetsManager.qiblahImage,
             title: 'القبلة',
             routeName: '/qupla',
-            color: Color(0xFFC89B7B), // Brown shade
+            color: const Color(0xFFC89B7B), // Brown shade
           ),
           FeatureItem(
             icon: AssetsManager.ramadanImage,
             title: 'مواقيت الصلاة',
             routeName: '/prayer-times',
-            color: Color(0xFF7B90C8), // Blue shade
+            color: const Color(0xFF7B90C8), // Blue shade
           ),
           FeatureItem(
             icon: AssetsManager.azkarImage,
             title: 'الاذكار',
             routeName: '/athkar',
-            color: Color(0xFFC87B7B), // Red shade
+            color: const Color(0xFFC87B7B), // Red shade
           ),
+        
         ],
       ),
     );
