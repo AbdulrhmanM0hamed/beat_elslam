@@ -21,7 +21,7 @@ class _LastReadCardState extends State<LastReadCard> {
   bool _isLoading = true;
   String _surahName = '';
   String _surahNameArabic = '';
-  int _pageNumber = 1;
+  int _pageNumber = 1; // رقم الصفحة الأصلي (غير معكوس)
   String _hijriDate = '';
   
   @override
@@ -30,50 +30,64 @@ class _LastReadCardState extends State<LastReadCard> {
     _loadLastReadData();
   }
   
-  // Find the surah that contains the given page number
-  Surah _findSurahByPageNumber(int pageNumber) {
-    // Load all surahs and sort them by page number
-    final List<Surah> orderedSurahs = List.from(SurahList.surahs)
-      ..sort((a, b) => a.pageNumber.compareTo(b.pageNumber));
+  // Find the surah that contains the given original page number
+  Surah _findSurahByPageNumber(int originalPageNumber) {
+    // نستخدم رقم الصفحة الأصلي لإيجاد السورة المناسبة
+    debugPrint('Finding surah for original page number: $originalPageNumber');
     
-    // Find the last surah with a starting page number less than or equal to the given page
-    for (int i = orderedSurahs.length - 1; i >= 0; i--) {
-      if (orderedSurahs[i].pageNumber <= pageNumber) {
-        // Check if this is the last surah
-        if (i == orderedSurahs.length - 1) {
-          return orderedSurahs[i];
+    // تحميل جميع السور وترتيبها حسب رقم الصفحة الأصلي
+    final List<Surah> orderedSurahs = List.from(SurahList.surahs)
+      ..sort((a, b) => a.originalPageNumber.compareTo(b.originalPageNumber));
+    
+    // البحث عن آخر سورة برقم صفحة بداية أقل من أو يساوي رقم الصفحة المعطى
+    for (int i = 0; i < orderedSurahs.length; i++) {
+      final Surah currentSurah = orderedSurahs[i];
+      debugPrint('Checking surah ${currentSurah.name} - Original page: ${currentSurah.originalPageNumber}');
+      
+      // إذا كانت هذه آخر سورة
+      if (i == orderedSurahs.length - 1) {
+        if (currentSurah.originalPageNumber <= originalPageNumber) {
+          debugPrint('Found last surah: ${currentSurah.name}');
+          return currentSurah;
         }
-        
-        // Check if the page is before the next surah starts
-        if (pageNumber < orderedSurahs[i + 1].pageNumber) {
-          return orderedSurahs[i];
+      } 
+      // التحقق مما إذا كانت الصفحة قبل بداية السورة التالية
+      else {
+        final Surah nextSurah = orderedSurahs[i + 1];
+        if (currentSurah.originalPageNumber <= originalPageNumber && 
+            originalPageNumber < nextSurah.originalPageNumber) {
+          debugPrint('Found surah: ${currentSurah.name}');
+          return currentSurah;
         }
       }
     }
     
-    // Default to the first surah if no match found
+    // الافتراضي هو السورة الأولى إذا لم يتم العثور على تطابق
+    debugPrint('No match found, returning first surah');
     return orderedSurahs.first;
   }
   
   Future<void> _loadLastReadData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      // Use the consistent key from QuranCubit for the last read page
+      // استخدام المفتاح المتسق من QuranCubit للصفحة الأخيرة المقروءة
       final lastPage = prefs.getInt(QuranCubit.kLastReadPageKey) ?? 1;
       
-      // Load all surahs
+      debugPrint('Last read page from SharedPreferences: $lastPage (original page)');
+      
+      // تحميل جميع السور
       await SurahList.loadSurahsPaginated(page: 1, pageSize: 114);
       
-      // Find the surah based on the page number
+      // العثور على السورة بناءً على رقم الصفحة
       final surah = _findSurahByPageNumber(lastPage);
       
-      // Get current Hijri date
+      // الحصول على التاريخ الهجري الحالي
       final hijri = HijriCalendar.now();
       final hijriMonth = hijri.hMonth;
       final hijriDay = hijri.hDay;
       final hijriYear = hijri.hYear;
       
-      // Get month name in Arabic
+      // اسم الشهر بالعربية
       final List<String> hijriMonths = [
         'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الآخرة',
         'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
@@ -99,10 +113,13 @@ class _LastReadCardState extends State<LastReadCard> {
   
   // Method to navigate to the last read page
   void _navigateToLastReadPage(BuildContext context) {
+    debugPrint('Navigating to last read page: $_pageNumber (original page)');
+    
     if (widget.onTap != null) {
       widget.onTap!();
     } else {
       // Navigate to Quran screen with the page number
+      // رقم الصفحة هنا هو رقم أصلي، لا حاجة للتحويل
       Navigator.of(context).pushNamed('/quran', arguments: _pageNumber);
     }
   }

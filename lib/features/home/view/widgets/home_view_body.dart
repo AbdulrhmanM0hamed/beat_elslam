@@ -12,20 +12,20 @@ class HomeViewBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           SizedBox(height: 8),
-          
+          SizedBox(height: 8),
+
           // Islamic features section
-           HomeFeaturesGrid(),
-          
+          HomeFeaturesGrid(),
+
           // Quran section
-         LastReadCard(),
-          
+          LastReadCard(),
+
           // Islamic content section
-      
-           IslamicContentGrid(),
-          
+
+          IslamicContentGrid(),
+
           // Bottom spacing
-           SizedBox(height: 16),
+          SizedBox(height: 16),
         ],
       ),
     );

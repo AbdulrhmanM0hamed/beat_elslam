@@ -87,24 +87,17 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
     }
   }
   
-  // Convert from Quran page number (1-based) to internal PDF page index (0-based)
-  int _convertToPdfPageIndex(int quranPageNumber) {
-    // PDF is already arranged for RTL reading, so we just need to convert to 0-based index
-    return quranPageNumber - 1;
-  }
-
-  // Convert from PDF page index (0-based) to Quran page number (1-based)
-  int _convertToQuranPageNumber(int pdfPageIndex) {
-    // Convert from 0-based to 1-based index
-    return pdfPageIndex + 1;
-  }
-  
   // Jump to a specific Quran page
   void _jumpToPage(int quranPageNumber) {
     if (quranPageNumber < 1 || quranPageNumber > _totalPages) return;
     
-    // Convert to PDF page index for the controller
-    final pdfPageIndex = _convertToPdfPageIndex(quranPageNumber);
+    debugPrint('Jumping to Quran page (original): $quranPageNumber');
+    
+    // استخدام الدالة المساعدة من QuranCubit للتحويل إلى فهرس PDF
+    final pdfPageIndex = QuranCubit.convertToPdfIndex(quranPageNumber);
+    
+    debugPrint('PDF page index: $pdfPageIndex');
+    
     _pdfViewController?.setPage(pdfPageIndex);
   }
   
@@ -178,6 +171,15 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
   
   // PDF Viewer widget
   Widget _buildPdfViewer(BuildContext context) {
+    final cubit = context.read<QuranCubit>();
+    final initialQuranPage = cubit.state.currentPage;
+    final initialPdfPageIndex = QuranCubit.convertToPdfIndex(initialQuranPage);
+    
+    debugPrint('=== PDF Viewer Setup ===');
+    debugPrint('Initial Quran page from cubit: $initialQuranPage');
+    debugPrint('Initial PDF page index: $initialPdfPageIndex');
+    debugPrint('Total pages: $_totalPages');
+    
     return PDFView(
       filePath: _pdfPath!,
       enableSwipe: true,
@@ -185,16 +187,18 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
       autoSpacing: false,
       pageFling: true,
       pageSnap: true,
-      defaultPage: _convertToPdfPageIndex(context.read<QuranCubit>().state.currentPage),
+      defaultPage: initialPdfPageIndex,
       fitPolicy: FitPolicy.BOTH,
       preventLinkNavigation: false,
       onRender: (_pages) {
+        debugPrint('PDF Rendered with ${_pages ?? 0} pages');
         setState(() {
           _isLoading = false;
           _totalPages = _pages!;
           
           // Get the current page from the cubit
-          _currentPage = context.read<QuranCubit>().state.currentPage;
+          _currentPage = cubit.state.currentPage;
+          debugPrint('Current page after render: $_currentPage');
         });
       },
       onError: (error) {
@@ -202,28 +206,33 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
       },
       onPageChanged: (int? pdfPageIndex, int? total) {
         if (pdfPageIndex != null && total != null) {
-          // Convert from PDF page index to Quran page number
-          final quranPageNumber = _convertToQuranPageNumber(pdfPageIndex);
+          // نحول من فهرس PDF إلى رقم صفحة قرآن أصلي
+          final originalQuranPage = QuranCubit.convertFromPdfIndex(pdfPageIndex);
+          
+          debugPrint('PDF Page changed: index=$pdfPageIndex, converted to original Quran page=$originalQuranPage');
           
           setState(() {
-            _currentPage = quranPageNumber;
+            _currentPage = originalQuranPage;
           });
           
-          // Save page in cubit state
-          context.read<QuranCubit>().onPageChanged(quranPageNumber);
+          // حفظ الصفحة في حالة الـ cubit
+          cubit.onPageChanged(pdfPageIndex);
         }
       },
       onViewCreated: (PDFViewController controller) {
         _pdfViewController = controller;
         
         // Set initial page based on cubit state
-        final initialQuranPage = context.read<QuranCubit>().state.currentPage;
-        final initialPdfPageIndex = _convertToPdfPageIndex(initialQuranPage);
+        final initialQuranPage = cubit.state.currentPage;
+        final initialPdfPageIndex = QuranCubit.convertToPdfIndex(initialQuranPage);
         
-        debugPrint('Initial Quran page: $initialQuranPage, PDF index: $initialPdfPageIndex');
+        debugPrint('PDF View Created:');
+        debugPrint('Initial Quran page: $initialQuranPage');
+        debugPrint('Initial PDF index: $initialPdfPageIndex');
         
         Future.delayed(const Duration(milliseconds: 100), () {
           _pdfViewController?.setPage(initialPdfPageIndex);
+          debugPrint('Delayed setPage to $initialPdfPageIndex');
         });
       },
     );
@@ -294,21 +303,24 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // Previous page button (right side)
+                // Next page button (right side in Arabic reading, moves to higher Quran page number)
+                // In the reversed PDF, this means moving to a lower PDF page index
                 _buildNavButton(
-                  label: 'السابقة',
-                  icon: Icons.arrow_back_ios,
-                  iconFirst: false,
+                  label: 'التالية',
+                  icon: Icons.arrow_forward_ios,
+                  iconFirst: true,
                   onPressed: () {
                     if (_pdfViewController != null) {
-                      // Convert current Quran page to PDF index, then navigate
-                      final currentPdfPageIndex = _convertToPdfPageIndex(_currentPage);
+                      // Convert current Quran page to PDF index, then navigate to next Quran page
+                      // Since PDF is reversed, we need to decrease the PDF page index to move forward in the Quran
+                      final currentPdfPageIndex = QuranCubit.convertToPdfIndex(_currentPage);
+                      // We check if there are pages before the current one (in a reversed context)
                       if (currentPdfPageIndex > 0) {
                         _pdfViewController!.setPage(currentPdfPageIndex - 1);
                       }
                     }
                   },
-                  tooltip: 'الصفحة السابقة',
+                  tooltip: 'الصفحة التالية',
                 ),
                 
                 // Table of contents button
@@ -321,21 +333,24 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
                 // Page indicator and jump to page
                 _buildPageIndicator(context, state),
                 
-                // Next page button (left side)
+                // Previous page button (left side in Arabic reading, moves to lower Quran page number)
+                // In the reversed PDF, this means moving to a higher PDF page index
                 _buildNavButton(
-                  label: 'التالية',
-                  icon: Icons.arrow_forward_ios,
-                  iconFirst: true,
+                  label: 'السابقة',
+                  icon: Icons.arrow_back_ios,
+                  iconFirst: false,
                   onPressed: () {
                     if (_pdfViewController != null) {
-                      // Convert current Quran page to PDF index, then navigate
-                      final currentPdfPageIndex = _convertToPdfPageIndex(_currentPage);
+                      // Convert current Quran page to PDF index, then navigate to previous Quran page
+                      // Since PDF is reversed, we need to increase the PDF page index to move backward in the Quran
+                      final currentPdfPageIndex = QuranCubit.convertToPdfIndex(_currentPage);
+                      // We check if there are pages after the current one (in a reversed context)
                       if (currentPdfPageIndex < _totalPages - 1) {
                         _pdfViewController!.setPage(currentPdfPageIndex + 1);
                       }
                     }
                   },
-                  tooltip: 'الصفحة التالية',
+                  tooltip: 'الصفحة السابقة',
                 ),
               ],
             ),

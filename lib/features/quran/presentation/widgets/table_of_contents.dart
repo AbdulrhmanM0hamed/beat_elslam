@@ -95,7 +95,22 @@ class _TableOfContentsState extends State<TableOfContents> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuranCubit, QuranState>(
+    // إضافة استماع صريح للتغييرات
+    print('Building TableOfContents widget');
+    
+    return BlocConsumer<QuranCubit, QuranState>(
+      listener: (context, state) {
+        // استمع للتغييرات في الصفحة الحالية
+        print('TableOfContents - State change detected: page=${state.currentPage}');
+        
+        // تحديث القائمة عند تغيير الصفحة
+        if (!_isLoading && SurahList.surahs.isNotEmpty) {
+          setState(() {
+            // تحديث القائمة فقط
+            print('TableOfContents - Refreshing list due to page change');
+          });
+        }
+      },
       builder: (context, state) {
         if (!state.isTableOfContentsVisible) {
           return const SizedBox.shrink();
@@ -297,7 +312,13 @@ class _TableOfContentsState extends State<TableOfContents> {
                                 return SurahListItem(
                                   surah: surah,
                                   onTap: () {
-                                    context.read<QuranCubit>().navigateToPage(surah.pageNumber);
+                                    // استخدام الرقم الأصلي للصفحة مباشرة
+                                    // QuranCubit الآن يتوقع رقم صفحة أصلي
+                                    debugPrint('Navigating to surah ${surah.name} (${surah.id})');
+                                    debugPrint('Original page number: ${surah.originalPageNumber}');
+                                    
+                                    // استخدام الصفحة الأصلية للانتقال
+                                    context.read<QuranCubit>().navigateToPage(surah.originalPageNumber);
                                   },
                                   isCurrentlyReading: _isCurrentlyReading(surah, state.currentPage),
                                 );
@@ -340,26 +361,52 @@ class _TableOfContentsState extends State<TableOfContents> {
   }
   
   bool _isCurrentlyReading(Surah surah, int currentPage) {
-    // Get all surahs in order
+    // الآن currentPage هو رقم صفحة أصلي من Cubit
+    // لا نحتاج إلى تحويله
+    
+    // إضافة تسجيل للتصحيح
+    if (surah.id < 5) { // تسجيل أول بضع سور فقط لتجنب كثرة السجلات
+      print('Checking if surah ${surah.name} (${surah.id}) is current: currentPage=$currentPage (original)');
+    }
+    
+    // Get all surahs in order by their original page numbers (lowest to highest)
     final List<Surah> orderedSurahs = List.from(SurahList.surahs)
-      ..sort((a, b) => a.pageNumber.compareTo(b.pageNumber));
+      ..sort((a, b) => a.originalPageNumber.compareTo(b.originalPageNumber));
     
     // Find the current surah's index
     final int surahIndex = orderedSurahs.indexWhere((s) => s.id == surah.id);
     if (surahIndex == -1) return false;
     
-    // Get the current surah's page range
-    final int startPage = surah.pageNumber;
+    // استخدم الصفحة الحالية مباشرة لأنها أصلية الآن
+    final int originalCurrentPage = currentPage;
     
-    // If this is the last surah, its range extends to the end of the Quran
+    // Get the current surah's page range using original page numbers
+    final int startPage = surah.originalPageNumber;
+    
+    // If this is the last surah in the ordered list (Surah Al-Nas), 
+    // its range extends to the end of the Quran
     if (surahIndex == orderedSurahs.length - 1) {
-      return currentPage >= startPage;
+      final bool isReading = originalCurrentPage >= startPage;
+      
+      if (isReading && surah.id < 5) {
+        print('Surah ${surah.name} IS current (last surah case)');
+        print('  originalCurrentPage=$originalCurrentPage, startPage=$startPage');
+      }
+      
+      return isReading;
     }
     
     // Get the next surah's starting page (which is the end of the current surah's range)
-    final int endPage = orderedSurahs[surahIndex + 1].pageNumber - 1;
+    final int endPage = orderedSurahs[surahIndex + 1].originalPageNumber - 1;
     
     // Check if the current page falls within this surah's range
-    return currentPage >= startPage && currentPage <= endPage;
+    final bool isReading = originalCurrentPage >= startPage && originalCurrentPage <= endPage;
+    
+    if (isReading && surah.id < 5) {
+      print('Surah ${surah.name} IS current');
+      print('  originalCurrentPage=$originalCurrentPage, startPage=$startPage, endPage=$endPage');
+    }
+    
+    return isReading;
   }
 } 
