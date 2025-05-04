@@ -175,6 +175,7 @@ class AllahNameDetailsScreen extends StatelessWidget {
                             style: getMediumStyle(
                               fontFamily: FontConstant.cairo,
                               fontSize: FontSize.size18,
+                              color: AppColors.black
                             ),
                             textAlign: TextAlign.center,
                           ),

@@ -4,6 +4,7 @@ import 'package:beat_elslam/features/prayer_times/services/prayer_reminder_servi
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/helper/on_genrated_routes.dart';
@@ -49,28 +50,35 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<PrayerTimesCubit>(
-          create: (context) => PrayerTimesCubit(PrayerTimesRepositoryImpl()),
-        ),
-      ],
-      child: MaterialApp(
-        useInheritedMediaQuery: true,
-        debugShowCheckedModeBanner: false,
-        title: 'بيت الاسلام',
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        //  themeMode: themeMode,
-        supportedLocales: const [Locale('ar')],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        onGenerateRoute: onGenratedRoutes,
-        home: const HomeView(),
-      ),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // Standard iPhone X size as a baseline
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<PrayerTimesCubit>(
+              create: (context) => PrayerTimesCubit(PrayerTimesRepositoryImpl()),
+            ),
+          ],
+          child: MaterialApp(
+            useInheritedMediaQuery: true,
+            debugShowCheckedModeBanner: false,
+            title: 'بيت الاسلام',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            //  themeMode: themeMode,
+            supportedLocales: const [Locale('ar')],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            onGenerateRoute: onGenratedRoutes,
+            home: const HomeView(),
+          ),
+        );
+      },
     );
   }
 }

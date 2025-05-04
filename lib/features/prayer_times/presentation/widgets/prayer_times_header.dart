@@ -41,7 +41,7 @@ class PrayerTimesHeader extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Text(
-              '  مواقيت الصلاة فى القاهرة',
+              '  مواقيت الصلاة  ',
               style: getBoldStyle(
                 fontFamily: FontConstant.cairo,
                 fontSize: FontSize.size24,

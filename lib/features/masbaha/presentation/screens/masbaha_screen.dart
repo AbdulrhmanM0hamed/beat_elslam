@@ -3,6 +3,7 @@ import 'package:beat_elslam/core/utils/constant/styles_manger.dart';
 import 'package:beat_elslam/core/utils/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../cubit/masbaha_cubit.dart';
 import '../cubit/masbaha_state.dart';
@@ -15,7 +16,7 @@ class CustomAppBar extends AppBar {
             title,
             style: getBoldStyle(
               fontFamily: FontConstant.cairo,
-              fontSize: 18,
+              fontSize: 18.sp,
               color: Colors.white,
             ),
           ),
@@ -47,6 +48,8 @@ class MasbahaScreen extends StatelessWidget {
           ),
           child: BlocBuilder<MasbahaCubit, MasbahaState>(
             builder: (context, state) {
+              final isMaxCount = state.counter >= MasbahaCubit.maxCount;
+              
               return Stack(
                 alignment: Alignment.center,
                 children: [
@@ -54,7 +57,7 @@ class MasbahaScreen extends StatelessWidget {
                   Column(
                     children: [
                       // Counter display
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                       Expanded(
                         flex: 3,
                         child: Center(
@@ -65,12 +68,27 @@ class MasbahaScreen extends StatelessWidget {
                                 '${state.counter}',
                                 style: getBoldStyle(
                                   fontFamily: FontConstant.cairo,
-                                  fontSize: 90,
+                                  fontSize: 90.sp,
                                   color: AppColors.primary,
                                 )
                               ),
-                              const SizedBox(height: 30),
-             
+                              SizedBox(height: 30.h),
+                              if (isMaxCount)
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(16.r),
+                                  ),
+                                  child: Text(
+                                    'وصلت للحد الأقصى (1000)',
+                                    style: getBoldStyle(
+                                      fontFamily: FontConstant.cairo,
+                                      fontSize: 16.sp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -80,7 +98,7 @@ class MasbahaScreen extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(16.r),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -94,20 +112,18 @@ class MasbahaScreen extends StatelessWidget {
                                       color: Colors.red,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
+                                  SizedBox(width: 12.w),
                                   Expanded(
                                     child: _buildActionButton(
                                       onTap: () => context.read<MasbahaCubit>().setToOne(),
                                       label: 'البدء',
                                       icon: Icons.looks_one,
-                                      color: Colors.green,
+                                      color: state.counter == 0 ? Colors.green : Colors.grey,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                              
                                 ],
                               ),
-                              const SizedBox(height: 20),
+                              SizedBox(height: 20.h),
                             ],
                           ),
                         ),
@@ -123,21 +139,25 @@ class MasbahaScreen extends StatelessWidget {
                       shape: const CircleBorder(),
                       clipBehavior: Clip.hardEdge,
                       child: InkWell(
-                        onTap: () => context.read<MasbahaCubit>().increment(),
+                        onTap: isMaxCount 
+                          ? null 
+                          : () => context.read<MasbahaCubit>().increment(),
                         splashColor: Colors.white.withOpacity(0.3),
                         highlightColor: Colors.white.withOpacity(0.1),
                         child: Ink(
-                          height: 150,
-                          width: 150,
+                          height: 150.h,
+                          width: 150.w,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.primary,
+                            color: isMaxCount 
+                              ? AppColors.primary.withOpacity(0.5) 
+                              : AppColors.primary,
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.primary.withOpacity(0.3),
-                                blurRadius: 15,
+                                blurRadius: 15.r,
                                 spreadRadius: 2,
-                                offset: const Offset(0, 5),
+                                offset: Offset(0, 5.h),
                               ),
                             ],
                           ),
@@ -146,7 +166,7 @@ class MasbahaScreen extends StatelessWidget {
                               'تسبيح',
                               style: getSemiBoldStyle(
                                 fontFamily: FontConstant.cairo,
-                                fontSize: 22,
+                                fontSize: 22.sp,
                                 color: Colors.white,
                               ),
                             ),
@@ -172,28 +192,29 @@ class MasbahaScreen extends StatelessWidget {
   }) {
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(16.r),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
         onTap: onTap,
         splashColor: color.withOpacity(0.3),
         highlightColor: color.withOpacity(0.1),
         child: Ink(
-          height: 56,
+          height: 56.h,
           decoration: BoxDecoration(
             color: color.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             border: Border.all(color: color, width: 1.5),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: color),
-              const SizedBox(width: 8),
+              Icon(icon, color: color, size: 24.sp),
+              SizedBox(width: 8.w),
               Text(
                 label,
                 style: getSemiBoldStyle(
                   fontFamily: FontConstant.cairo,
+                  fontSize: 16.sp,
                   color: color,
                 )
               ),
@@ -203,5 +224,4 @@ class MasbahaScreen extends StatelessWidget {
       ),
     );
   }
-
 } 

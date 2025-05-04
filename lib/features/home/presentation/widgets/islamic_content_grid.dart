@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'content_card.dart';
 
 class IslamicContentGrid extends StatelessWidget {
@@ -7,12 +8,12 @@ class IslamicContentGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
       child: GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
+        mainAxisSpacing: 12.h,
+        crossAxisSpacing: 12.w,
         childAspectRatio: 0.8, // Make cards slightly taller than wide
         physics: const NeverScrollableScrollPhysics(),
         children: [

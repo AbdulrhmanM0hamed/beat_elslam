@@ -5,6 +5,7 @@ import 'package:beat_elslam/features/asma_allah/presentation/cubit/asma_allah_cu
 import 'package:beat_elslam/features/asma_allah/presentation/screens/asma_allah_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 
 class FeatureItem extends StatelessWidget {
@@ -48,12 +49,11 @@ class FeatureItem extends StatelessWidget {
         }
       },
       child: Container(
-        width: 80,
-        height: 110,
-        margin: const EdgeInsets.symmetric(horizontal: 8),
+        width: 80.w,
+        height: 110.h,
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           border: Border.all(color: color.withOpacity(0.15), width: 1.5),
         ),
         child: Column(
@@ -63,23 +63,23 @@ class FeatureItem extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(30.r),
                   child: Image.asset(
                     icon,
-                    width: 50,
-                    height: 50,
+                    width: 50.w,
+                    height: 50.h,
                     fit: BoxFit.contain,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               title,
               textAlign: TextAlign.center,
               style: getBoldStyle(
                 fontFamily: FontConstant.cairo,
-                fontSize: FontSize.size12,
+                fontSize: FontSize.size12.sp,
                 color: color.withOpacity(0.8),
               ),
             ),

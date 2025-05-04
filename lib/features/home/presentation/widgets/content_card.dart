@@ -1,6 +1,7 @@
 import 'package:beat_elslam/core/utils/constant/font_manger.dart';
 import 'package:beat_elslam/core/utils/constant/styles_manger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ContentCard extends StatelessWidget {
   final String title;
@@ -21,15 +22,15 @@ class ContentCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.all(8),
+        margin: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
           color: cardColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
               color: cardColor.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              blurRadius: 8.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
@@ -41,39 +42,39 @@ class ContentCard extends StatelessWidget {
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24.r),
+                  bottomRight: Radius.circular(24.r),
                 ),
                 child: Image.asset(
                   'assets/images/splash_background.png',
                   color: Colors.white.withOpacity(0.1),
                   fit: BoxFit.cover,
-                  height: 100,
+                  height: 100.h,
                 ),
               ),
             ),
             
             // Content
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.r),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Icon with background
                   Container(
-                    width: 80,
-                    height: 80,
-                    padding: const EdgeInsets.all(12),
+                    width: 80.w,
+                    height: 80.h,
+                    padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Image.asset(
                       iconPath,
-                      width: 60,
-                      height: 60,
+                      width: 60.w,
+                      height: 60.h,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -86,7 +87,7 @@ class ContentCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: getBoldStyle(
                       fontFamily: FontConstant.cairo,
-                      fontSize: FontSize.size18,
+                      fontSize: FontSize.size18.sp,
                       color: Colors.white,
                     ),
                   ),

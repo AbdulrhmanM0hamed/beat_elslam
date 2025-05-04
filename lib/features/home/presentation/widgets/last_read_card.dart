@@ -2,6 +2,7 @@ import 'package:beat_elslam/core/utils/constant/font_manger.dart';
 import 'package:beat_elslam/core/utils/constant/styles_manger.dart';
 import 'package:beat_elslam/core/utils/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../features/quran/data/models/surah_model.dart';
@@ -129,16 +130,16 @@ class _LastReadCardState extends State<LastReadCard> {
     return GestureDetector(
       onTap: () => _navigateToLastReadPage(context),
       child: Container(
-        height: 120,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        height: 120.h,
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
           color: AppColors.info,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
+              blurRadius: 8.r,
+              offset: Offset(0, 3.h),
             ),
           ],
         ),
@@ -148,15 +149,15 @@ class _LastReadCardState extends State<LastReadCard> {
                 children: [
                   // Date on top right
                   Positioned(
-                    top: -5,
-                    right: 10,
+                    top: -5.h,
+                    right: 10.w,
                     child: Container(
-                      height: 35,
-                      width: 150,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      height: 36.h,
+                      width: 150.w,
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFD336),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -165,7 +166,7 @@ class _LastReadCardState extends State<LastReadCard> {
                             _hijriDate,
                             style: getBoldStyle(
                               fontFamily: FontConstant.cairo,
-                              fontSize: FontSize.size13,
+                              fontSize: FontSize.size13.sp,
                               color: AppColors.textPrimary,
                             ),
                             textAlign: TextAlign.center,
@@ -178,64 +179,64 @@ class _LastReadCardState extends State<LastReadCard> {
 
                   // Left side content
                   Positioned(
-                    top: 22,
-                    left: 16,
+                    top: 22.h,
+                    left: 16.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Last read text
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               'Last Read ',
                               style: TextStyle(
                                 color: Colors.white70,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             Text(
                               'آخر قراءة - صفحة $_pageNumber',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white70,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                         // Surah name
                         Text(
                           '$_surahName - $_surahNameArabic',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         // Go to button
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
-                          child:const Row( 
+                          child: Row( 
                             mainAxisSize: MainAxisSize.min,
-                            children:  [
-                              Icon(Icons.arrow_back, color: Colors.white, size: 16),
-                              SizedBox(width: 4),
+                            children: [
+                              Icon(Icons.arrow_back, color: Colors.white, size: 16.sp),
+                              SizedBox(width: 4.w),
                               Text(
                                 'Go to',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -248,12 +249,12 @@ class _LastReadCardState extends State<LastReadCard> {
 
                   // Lantern icon below date
                   Positioned(
-                    bottom: 5,
-                    right: 20,
+                    bottom: 5.h,
+                    right: 20.w,
                     child: Image.asset(
                       'assets/images/lantern.png',
-                      height: 80,
-                      width: 80,
+                      height: 80.h,
+                      width: 80.w,
                       fit: BoxFit.contain,
                     ),
                   ),

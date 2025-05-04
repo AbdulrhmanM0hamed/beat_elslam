@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/constant/assets_manager.dart';
 import 'feature_item.dart';
 
@@ -8,12 +9,11 @@ class HomeFeaturesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
-      padding: const EdgeInsets.only(top: 10),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        scrollDirection: Axis.horizontal,
+      height: 130.h,
+      padding: EdgeInsets.only(top: 10.h, left: 12.w, right: 12.w),
+      margin: EdgeInsets.symmetric(vertical: 10.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FeatureItem(
             icon: AssetsManager.pngtreeImage,
@@ -39,7 +39,6 @@ class HomeFeaturesGrid extends StatelessWidget {
             routeName: '/athkar',
             color: const Color(0xFFC87B7B), // Red shade
           ),
-        
         ],
       ),
     );

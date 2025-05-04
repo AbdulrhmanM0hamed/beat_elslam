@@ -152,6 +152,7 @@ class _AzkarDetailsScreenState extends State<AzkarDetailsScreen> {
                         fontSize: 22,
                         height: 1.8,
                         fontFamily: 'Cairo',
+                        
                       ),
                     ),
                     const SizedBox(height: 16),

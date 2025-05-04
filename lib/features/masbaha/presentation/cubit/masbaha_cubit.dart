@@ -5,6 +5,7 @@ import 'masbaha_state.dart';
 class MasbahaCubit extends Cubit<MasbahaState> {
   static const String _counterKey = 'masbaha_counter';
   static const String _savedCountsKey = 'masbaha_saved_counts';
+  static const int maxCount = 1000; // Maximum count limit
   
   MasbahaCubit() : super(const MasbahaState()) {
     _loadSavedData();
@@ -40,9 +41,12 @@ class MasbahaCubit extends Cubit<MasbahaState> {
   }
 
   void increment() {
-    final newState = state.copyWith(counter: state.counter + 1);
-    emit(newState);
-    _saveData();
+    // Only increment if counter is less than the maximum limit
+    if (state.counter < maxCount) {
+      final newState = state.copyWith(counter: state.counter + 1);
+      emit(newState);
+      _saveData();
+    }
   }
 
   void reset() {
@@ -52,9 +56,12 @@ class MasbahaCubit extends Cubit<MasbahaState> {
   }
 
   void setToOne() {
-    final newState = state.copyWith(counter: 1);
-    emit(newState);
-    _saveData();
+    // Only set to one if counter is currently zero
+    if (state.counter == 0) {
+      final newState = state.copyWith(counter: 1);
+      emit(newState);
+      _saveData();
+    }
   }
 
   void saveCount() {
