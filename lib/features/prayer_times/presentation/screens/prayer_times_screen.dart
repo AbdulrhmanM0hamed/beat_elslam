@@ -118,34 +118,54 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
             );
           } else if (state is PrayerTimesError) {
             debugPrint('❌ PrayerTimesScreen: Error state - ${state.message}');
+            final isNoInternet = state.message.contains('SocketException') || state.message.contains('Failed host lookup');
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'حدث خطأ أثناء تحميل مواقيت الصلاة',
-                    style: getBoldStyle(
-                      fontFamily: FontConstant.cairo,
-                      fontSize: FontSize.size16,
+                  if (isNoInternet) ...[
+                    Image.asset(
+                      'assets/images/internet_disconnect.png',
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      'الاتصال بالإنترنت مطلوب لعرض مواقيت الصلاة',
+                      style: getBoldStyle(
+                        fontFamily: FontConstant.cairo,
+                        fontSize: FontSize.size16,
+                        color: AppColors.textPrimary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ] else ...[
+                    const Icon(
+                      Icons.error_outline,
                       color: Colors.red,
+                      size: 60,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: getRegularStyle(
-                      fontFamily: FontConstant.cairo,
-                      fontSize: FontSize.size14,
-                      color: AppColors.textSecondary,
+                    const SizedBox(height: 16),
+                    Text(
+                      'حدث خطأ أثناء تحميل مواقيت الصلاة',
+                      style: getBoldStyle(
+                        fontFamily: FontConstant.cairo,
+                        fontSize: FontSize.size16,
+                        color: Colors.red,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
+                    const SizedBox(height: 8),
+                    Text(
+                      state.message,
+                      style: getRegularStyle(
+                        fontFamily: FontConstant.cairo,
+                        fontSize: FontSize.size14,
+                        color: AppColors.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: _loadPrayerTimes,

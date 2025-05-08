@@ -49,6 +49,7 @@ dependencies:
     sdk: flutter
   flutter_native_splash: ^2.4.6
   flutter_pdfview: ^1.4.0+1
+  flutter_screenutil: ^5.9.3
   flutter_svg: ^2.0.14
   flutter_tts: ^3.8.5
   geolocator: ^14.0.0
@@ -59,13 +60,13 @@ dependencies:
   just_audio_background: ^0.0.1-beta.11
   location: ^8.0.0
   logger: ^2.5.0
+
   path_provider: ^2.1.5
   pdfrx: ^1.1.25
   shared_preferences: ^2.5.3
   syncfusion_flutter_pdfviewer: ^29.1.39
   timezone: ^0.10.0
   vector_math: ^2.1.4
-  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0

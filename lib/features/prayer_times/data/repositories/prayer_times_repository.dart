@@ -33,6 +33,7 @@ class PrayerTimesRepositoryImpl implements PrayerTimesRepository {
 
       debugPrint('🔍 Calling API with region: $region, country: $country');
       
+      // عدم التقاط أخطاء الشبكة هنا للسماح بانتشارها إلى الكيوبت
       final response = await _dio.get(
         'https://alquran.vip/APIs/getPrayerTimes',
         queryParameters: {
@@ -66,7 +67,15 @@ class PrayerTimesRepositoryImpl implements PrayerTimesRepository {
       }
     } catch (e) {
       debugPrint('❌ Error calling API: $e');
-      // إذا فشل الاتصال، استخدم البيانات الافتراضية
+      // السماح بانتشار أخطاء الشبكة للتعامل معها في واجهة المستخدم
+      if (e is DioException && 
+          (e.type == DioExceptionType.connectionTimeout || 
+           e.type == DioExceptionType.connectionError ||
+           e.type == DioExceptionType.unknown)) {
+        // إعادة إلقاء أخطاء الشبكة ليتم عرض رسالة عدم الاتصال
+        throw e;
+      }
+      // للأخطاء الأخرى، استخدم البيانات الافتراضية
       return _getDefaultPrayerTimes(region, country);
     }
   }

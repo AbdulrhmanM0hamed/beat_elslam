@@ -12,6 +12,7 @@ import '../widgets/table_of_contents.dart';
 import '../../../../core/utils/constant/font_manger.dart';
 import '../../../../core/utils/constant/styles_manger.dart';
 import '../../../../core/utils/theme/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A screen that displays the Quran content in a PDF viewer with RTL support
 class QuranContentScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _showZoomHintDialog();
+    _showZoomHintDialogIfNeeded();
     _loadDocument();
     _loadSurahData();
   }
@@ -102,55 +103,59 @@ class _QuranContentScreenState extends State<QuranContentScreen> with WidgetsBin
     _pdfViewController?.setPage(pdfPageIndex);
   }
   
-  // Show zoom hint dialog on first entry
-  void _showZoomHintDialog() async {
-    await Future.delayed(const Duration(milliseconds: 400)); // Small delay for smoothness
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        contentPadding: const EdgeInsets.all(20),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              'assets/images/zoom.png',
-              width: 90,
-              height: 90,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 18),
-            Text(
-              'يمكنك تكبير أو تصغير صفحة المصحف بسهولة!\n\nاستخدم إصبعيك للتكبير (Zoom In) أو التصغير (Zoom Out) بحرية لقراءة أوضح وأكثر راحة.',
-              textAlign: TextAlign.center,
-              style: getMediumStyle(
-                fontFamily: FontConstant.cairo,
-                fontSize: 16,
-           
+  // Show zoom hint dialog only once using shared_preferences
+  void _showZoomHintDialogIfNeeded() async {
+    final prefs = await SharedPreferences.getInstance();
+    final shown = prefs.getBool('zoom_hint_shown') ?? false;
+    if (!shown && mounted) {
+      await Future.delayed(const Duration(milliseconds: 400));
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          contentPadding: const EdgeInsets.all(20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/images/zoom.png',
+                width: 90,
+                height: 90,
+                fit: BoxFit.contain,
               ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text(
-                'فهمت',
-                style: getBoldStyle(
+              const SizedBox(height: 18),
+              Text(
+                'يمكنك تكبير أو تصغير صفحة المصحف بسهولة!\n\nاستخدم إصبعيك للتكبير (Zoom In) أو التصغير (Zoom Out) بحرية لقراءة أوضح وأكثر راحة.',
+                textAlign: TextAlign.center,
+                style: getMediumStyle(
                   fontFamily: FontConstant.cairo,
-                  fontSize: 15,
-                  color: Colors.white,
+                  fontSize: 16,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: Text(
+                  'فهمت',
+                  style: getBoldStyle(
+                    fontFamily: FontConstant.cairo,
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+      await prefs.setBool('zoom_hint_shown', true);
+    }
   }
   
   @override
