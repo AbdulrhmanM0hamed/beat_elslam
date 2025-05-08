@@ -50,7 +50,7 @@ class IslamicContentGrid extends StatelessWidget {
           // Names of Allah Card
           ContentCard(
             title: 'أسماء الله الحسنى',
-            iconPath: 'assets/images/moon.png',
+            iconPath: 'assets/images/nameofallah.png',
             cardColor: const Color.fromARGB(255, 74, 137, 168),
             onTap: () {
               Navigator.pushNamed(context, '/asma-allah');

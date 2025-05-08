@@ -166,7 +166,7 @@ class _LastReadCardState extends State<LastReadCard> {
                             _hijriDate,
                             style: getBoldStyle(
                               fontFamily: FontConstant.cairo,
-                              fontSize: FontSize.size13.sp,
+                              fontSize: FontSize.size12.sp,
                               color: AppColors.textPrimary,
                             ),
                             textAlign: TextAlign.center,
