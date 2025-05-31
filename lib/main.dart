@@ -21,8 +21,8 @@ void main() async {
     // Initialize timezone data for scheduling notifications
     tz.initializeTimeZones();
 
-    // Initialize prayer reminder service
-    await PrayerReminderService().initialize();
+    
+
     
     // Set preferred orientations
     await SystemChrome.setPreferredOrientations([
