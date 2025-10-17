@@ -1,12 +1,12 @@
 # Privacy Policy
 
-**Last Updated:** May 31, 2025  
-**Application Name:** Bayt Al-Islam (بيت الإسلام)  
+**Last Updated:** Oct 17, 2025  
+**Application Name:** Zakron (ذاكرون)  
 **Contact Email:** bodamohmed60@gmail.com
 
 ---
 
-Welcome to **Bayt Al-Islam (بيت الإسلام)**! 🕌  
+Welcome to **Bayt Al-Islam (ذاكرون)**! 🕌  
 Your privacy is important to us. This Privacy Policy is intended to clearly explain how we handle your data.
 
 ---
@@ -37,7 +37,6 @@ are available locally and do **not** require internet access or user data.
 The app may request access to certain device features **only if needed**, such as:
 
 - **Location** (optional): Only used to calculate accurate prayer times and Qibla direction. The data is processed locally on your device and **never sent** to us or any server.
-- **Notifications** (optional): Used to remind you of prayer times or daily Azkar.
 
 You can control these permissions from your phone’s settings at any time.
 
@@ -63,5 +62,5 @@ If you have any questions or concerns about this Privacy Policy, feel free to co
 
 ---
 
-**Thank you for trusting Bayt Al-Islam.**  
+**Thank you for trusting Zakron.**  
 We pray it helps strengthen your faith and bring you closer to your Creator. 🤲🕊️
