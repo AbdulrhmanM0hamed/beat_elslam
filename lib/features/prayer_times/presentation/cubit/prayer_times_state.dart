@@ -23,9 +23,10 @@ class PrayerTimesLoaded extends PrayerTimesState {
 
 class PrayerTimesError extends PrayerTimesState {
   final String message;
+  final bool isNetworkError;
 
-  const PrayerTimesError(this.message);
+  const PrayerTimesError(this.message, {this.isNetworkError = false});
 
   @override
-  List<Object?> get props => [message];
-} 
+  List<Object?> get props => [message, isNetworkError];
+}

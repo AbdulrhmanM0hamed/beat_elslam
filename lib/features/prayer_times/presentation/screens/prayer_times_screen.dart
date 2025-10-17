@@ -118,7 +118,8 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
             );
           } else if (state is PrayerTimesError) {
             debugPrint('❌ PrayerTimesScreen: Error state - ${state.message}');
-            final isNoInternet = state.message.contains('SocketException') || state.message.contains('Failed host lookup');
+            debugPrint('🌐 PrayerTimesScreen: Is network error - ${state.isNetworkError}');
+            final isNoInternet = state.isNetworkError;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

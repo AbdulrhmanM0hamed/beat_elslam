@@ -1,6 +1,5 @@
 import 'package:beat_elslam/core/utils/theme/app_theme.dart';
 import 'package:beat_elslam/features/home/view/home_View.dart';
-import 'package:beat_elslam/features/prayer_times/services/prayer_reminder_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,9 +19,7 @@ void main() async {
 
     // Initialize timezone data for scheduling notifications
     tz.initializeTimeZones();
-
     
-
     
     // Set preferred orientations
     await SystemChrome.setPreferredOrientations([

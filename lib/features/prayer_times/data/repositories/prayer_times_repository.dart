@@ -31,14 +31,19 @@ class PrayerTimesRepositoryImpl implements PrayerTimesRepository {
         return _getDefaultPrayerTimes(region, country);
       }
 
-      debugPrint('🔍 Calling API with region: $region, country: $country');
+      // الحصول على التاريخ الحالي بتنسيق DD-MM-YYYY
+      final now = DateTime.now();
+      final currentDate = '${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}';
       
-      // عدم التقاط أخطاء الشبكة هنا للسماح بانتشارها إلى الكيوبت
+      debugPrint('🔍 Calling API with region: $region, country: $country');
+      debugPrint('📅 Using date: $currentDate');
+      
+      // استخدام API جديد وموثوق مع العنوان والتاريخ
       final response = await _dio.get(
-        'https://alquran.vip/APIs/getPrayerTimes',
+        'https://api.aladhan.com/v1/timingsByAddress/$currentDate',
         queryParameters: {
-          'region': region,
-          'country': country,
+          'address': '$region,$country',
+          'method': 8, // Gulf Region method (أو يمكن استخدام 5 للطريقة المصرية)
         },
       );
 
@@ -59,7 +64,16 @@ class PrayerTimesRepositoryImpl implements PrayerTimesRepository {
           return _getDefaultPrayerTimes(region, country);
         }
         
-        return result;
+        // تحديث region و country بالقيم الصحيحة
+        final updatedResult = PrayerTimesResponse(
+          region: region,
+          country: country,
+          prayerTimes: result.prayerTimes,
+          date: result.date,
+          meta: result.meta,
+        );
+        
+        return updatedResult;
       } else {
         debugPrint('❌ API returned non-200 status code: ${response.statusCode}');
         // إذا فشلت الاستجابة، استخدم البيانات الافتراضية

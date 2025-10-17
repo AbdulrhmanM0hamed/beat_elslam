@@ -16,6 +16,23 @@ class PrayerTimesResponse extends Equatable {
   });
 
   factory PrayerTimesResponse.fromJson(Map<String, dynamic> json) {
+    // التعامل مع تنسيق aladhan API الجديد
+    if (json['data'] != null) {
+      final data = json['data'];
+      final timings = data['timings'] ?? {};
+      final dateInfo = data['date'] ?? {};
+      final meta = data['meta'] ?? {};
+      
+      return PrayerTimesResponse(
+        region: meta['method']?['location']?['latitude']?.toString() ?? '',
+        country: '', // سيتم تحديثه لاحقاً
+        prayerTimes: PrayerTimes.fromAladhanJson(timings),
+        date: DateInfo.fromAladhanJson(dateInfo),
+        meta: Meta.fromAladhanJson(meta),
+      );
+    }
+    
+    // التنسيق القديم للتوافق مع النسخة السابقة
     return PrayerTimesResponse(
       region: json['region'] ?? '',
       country: json['country'] ?? '',
@@ -57,6 +74,17 @@ class PrayerTimes extends Equatable {
     );
   }
 
+  factory PrayerTimes.fromAladhanJson(Map<String, dynamic> json) {
+    return PrayerTimes(
+      fajr: json['Fajr'] ?? '',
+      sunrise: json['Sunrise'] ?? '',
+      dhuhr: json['Dhuhr'] ?? '',
+      asr: json['Asr'] ?? '',
+      maghrib: json['Maghrib'] ?? '',
+      isha: json['Isha'] ?? '',
+    );
+  }
+
   @override
   List<Object?> get props => [fajr, sunrise, dhuhr, asr, maghrib, isha];
 }
@@ -74,6 +102,13 @@ class DateInfo extends Equatable {
     return DateInfo(
       dateEn: json['date_en'] ?? '',
       dateHijri: HijriDate.fromJson(json['date_hijri'] ?? {}),
+    );
+  }
+
+  factory DateInfo.fromAladhanJson(Map<String, dynamic> json) {
+    return DateInfo(
+      dateEn: json['readable'] ?? '',
+      dateHijri: HijriDate.fromAladhanJson(json['hijri'] ?? {}),
     );
   }
 
@@ -109,6 +144,17 @@ class HijriDate extends Equatable {
     );
   }
 
+  factory HijriDate.fromAladhanJson(Map<String, dynamic> json) {
+    return HijriDate(
+      date: json['date'] ?? '',
+      format: json['format'] ?? '',
+      day: json['day'] ?? '',
+      weekday: Weekday.fromAladhanJson(json['weekday'] ?? {}),
+      month: Month.fromAladhanJson(json['month'] ?? {}),
+      year: json['year'] ?? '',
+    );
+  }
+
   @override
   List<Object?> get props => [date, format, day, weekday, month, year];
 }
@@ -123,6 +169,13 @@ class Weekday extends Equatable {
   });
 
   factory Weekday.fromJson(Map<String, dynamic> json) {
+    return Weekday(
+      en: json['en'] ?? '',
+      ar: json['ar'] ?? '',
+    );
+  }
+
+  factory Weekday.fromAladhanJson(Map<String, dynamic> json) {
     return Weekday(
       en: json['en'] ?? '',
       ar: json['ar'] ?? '',
@@ -155,6 +208,15 @@ class Month extends Equatable {
     );
   }
 
+  factory Month.fromAladhanJson(Map<String, dynamic> json) {
+    return Month(
+      number: json['number'] ?? 0,
+      en: json['en'] ?? '',
+      ar: json['ar'] ?? '',
+      days: json['days'] ?? 0,
+    );
+  }
+
   @override
   List<Object?> get props => [number, en, ar, days];
 }
@@ -167,6 +229,12 @@ class Meta extends Equatable {
   });
 
   factory Meta.fromJson(Map<String, dynamic> json) {
+    return Meta(
+      timezone: json['timezone'] ?? '',
+    );
+  }
+
+  factory Meta.fromAladhanJson(Map<String, dynamic> json) {
     return Meta(
       timezone: json['timezone'] ?? '',
     );
